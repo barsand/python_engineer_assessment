@@ -24,6 +24,6 @@ services:
 
   test:
     build: .
-    command: ["./wait-for-it.sh", "database:3306", "--", "python", "test.py"]
+    command: ["./wait-for-it.sh", "database:3306", "--", "python", "tests/db-check.py"]
     depends_on:
       - database
