@@ -18,13 +18,16 @@ def home():
         }
     }
 
+
 @app.route("/insights/ages")
 def age():
     return business.fetch_people_age_indicators(csv_parser.db_info)
 
+
 @app.route("/insights/cities")
 def cities():
     return business.fetch_most_frequent_city(csv_parser.db_info)
+
 
 @app.route("/insights/interests")
 def interests():

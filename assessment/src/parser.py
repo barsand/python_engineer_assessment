@@ -14,10 +14,10 @@ class PeopleCSVParser:
     def __init__(self, csv_path):
         logger = logging.getLogger()
         logging.basicConfig(
-            stream = sys.stdout,
-            filemode = "w",
-            format = "%(levelname)s %(asctime)s - %(message)s",
-            level = os.environ.get('LOGLEVEL', logging.INFO)
+            stream=sys.stdout,
+            filemode="w",
+            format="%(levelname)s %(asctime)s - %(message)s",
+            level=os.environ.get("LOGLEVEL", logging.INFO),
         )
 
         logger.info("establishing database connection")
@@ -50,7 +50,6 @@ class PeopleCSVParser:
             sys.exit()
 
         self.read_csv(csv_path)
-
 
     def _json(self, obj=None, sort_keys=True, indent=4, **kwargs):
         if obj is None:
@@ -95,17 +94,19 @@ class PeopleCSVParser:
             if not person_interests:
                 continue
 
-            curr_city = utils.normalize_spacing(entry['City'])
-            curr_city = utils.normalize_case(entry['City'])
+            curr_city = utils.normalize_spacing(entry["City"])
+            curr_city = utils.normalize_case(entry["City"])
             curr_city = utils.remove_accentuation(curr_city)
 
-            self.people.append({
-                'Name': utils.normalize_spacing(entry['Name']),
-                'Age': entry['Age'],
-                'City': curr_city,
-                'PhoneNumber': utils.normalize_phone_number(entry['PhoneNumber']),
-                'Interests': person_interests,
-            })
+            self.people.append(
+                {
+                    "Name": utils.normalize_spacing(entry["Name"]),
+                    "Age": entry["Age"],
+                    "City": curr_city,
+                    "PhoneNumber": utils.normalize_phone_number(entry["PhoneNumber"]),
+                    "Interests": person_interests,
+                }
+            )
         logger.info("data cleaning finished")
 
     def to_db(self):
@@ -125,12 +126,11 @@ class PeopleCSVParser:
             if count % 1000 == 0:
                 logger.info("%d records inserted" % count)
 
-            res = db_info["connection"].execute(db_info["interests_tb"].insert().values({
-                "slug": interest
-            }))
+            res = db_info["connection"].execute(
+                db_info["interests_tb"].insert().values({"slug": interest})
+            )
             self.interest_slug2db_ref[interest] = res.inserted_primary_key[0]
         logger.info("insertion finished")
-
 
         count = 0
         logger.info("inserting %d records on `People` table" % len(self.people))
@@ -138,22 +138,31 @@ class PeopleCSVParser:
             count += 1
             if count % 1000 == 0:
                 logger.info("%d records inserted" % count)
-            res = db_info["connection"].execute(db_info["people_tb"].insert().values(**{
-                "name": person["Name"],
-                "age": person["Age"],
-                "phone_number": person["PhoneNumber"],
-                "city": person["City"],
-            }))
+            res = db_info["connection"].execute(
+                db_info["people_tb"]
+                .insert()
+                .values(
+                    **{
+                        "name": person["Name"],
+                        "age": person["Age"],
+                        "phone_number": person["PhoneNumber"],
+                        "city": person["City"],
+                    }
+                )
+            )
             person["db_ref"] = res.inserted_primary_key[0]
-
 
             for interest in person["Interests"]:
                 logger.debug("inserting data on `PeopleInterests` table")
                 res = db_info["connection"].execute(
-                    db_info["people_interests_tb"].insert().values(**{
-                        "person_id": person["db_ref"],
-                        "interest_id": self.interest_slug2db_ref[interest],
-                    })
+                    db_info["people_interests_tb"]
+                    .insert()
+                    .values(
+                        **{
+                            "person_id": person["db_ref"],
+                            "interest_id": self.interest_slug2db_ref[interest],
+                        }
+                    )
                 )
             logger.debug("insertion finished")
         logger.info("insertion finished")

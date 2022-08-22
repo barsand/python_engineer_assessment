@@ -6,7 +6,7 @@ from base import BaseTest
 
 class TestBusiness(BaseTest):
     def test_business_queries(self):
-        csv_parser = parser.PeopleCSVParser('./tests/data/people.csv')
+        csv_parser = parser.PeopleCSVParser("./tests/data/people.csv")
         csv_parser.clean_data()
         csv_parser.to_db()
 
@@ -16,7 +16,7 @@ class TestBusiness(BaseTest):
         )
         self.assertEqual(
             business.fetch_most_frequent_city(csv_parser.db_info),
-            {"city": "belo horizonte", "occurrences": 3}
+            {"city": "belo horizonte", "occurrences": 3},
         )
         self.assertEqual(
             sorted(business.fetch_top_interests(csv_parser.db_info, 2)),
