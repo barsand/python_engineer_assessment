@@ -10,7 +10,7 @@ CREATE TABLE `People` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `age` int(11) NOT NULL,
-  `phone_number` varchar(15) NOT NULL,
+  `phone_number` varchar(20) NOT NULL,
   `city` varchar(100) NOT NULL
 );
 

@@ -40,5 +40,4 @@ def fetch_top_interests(db_info, count=2):
         JOIN main.Interests
         ON q.interest_id = main.Interests.id
     """)
-    top_interests = list()
     return [i[0] for i in res]
