@@ -63,6 +63,7 @@ class PeopleCSVParser:
                 continue
 
             curr_city = utils.normalize_spacing(entry['City'])
+            curr_city = utils.normalize_case(entry['City'])
             curr_city = utils.remove_accentuation(curr_city)
 
             self.people.append({

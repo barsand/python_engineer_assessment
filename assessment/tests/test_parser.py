@@ -36,7 +36,7 @@ class TestParser(BaseTest):
 
         expected_rows = {
             "people_tb": 4,
-            "interests_tb": 13,
+            "interests_tb": 11,
             "people_interests_tb": 14,
         }
 
